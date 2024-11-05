@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sudoku Solver</title>
+    <link rel="stylesheet" href="4style.css"></link>
+</head>
+<body style="background: url('../images/task4 img.webp');">
+    <h1>Sudoku Solver</h1>
+    
+    <div id="sudoku-grid">
+        <!-- 9x9 grid cells will go here -->
+    </div>
+    <button onclick="solveSudoku()">Solve</button>
+
+    <script>
+        function createGrid() {
+            const grid = document.getElementById("sudoku-grid");
+            for (let i = 0; i < 81; i++) {
+                const input = document.createElement("input");
+                input.type = "number";
+                input.min = 1;
+                input.max = 9;
+                input.value = '';
+                grid.appendChild(input);
+            }
+        }
+
+        function solveSudoku() {
+            const cells = document.querySelectorAll("#sudoku-grid input");
+            const board = [];
+            let row = [];
+            cells.forEach((cell, index) => {
+                row.push(cell.value ? parseInt(cell.value) : 0);
+                if ((index + 1) % 9 === 0) {
+                    board.push(row);
+                    row = [];
+                }
+            });
+
+            if (sudokuSolver(board)) {
+                cells.forEach((cell, index) => {
+                    cell.value = board[Math.floor(index / 9)][index % 9];
+                });
+            } else {
+                alert("No solution exists for this puzzle.");
+            }
+        }
+
+        function isValid(board, row, col, num) {
+            for (let i = 0; i < 9; i++) {
+                if (board[row][i] === num || board[i][col] === num) return false;
+            }
+            const startRow = row - (row % 3), startCol = col - (col % 3);
+            for (let i = 0; i < 3; i++) {
+                for (let j = 0; j < 3; j++) {
+                    if (board[i + startRow][j + startCol] === num) return false;
+                }
+            }
+            return true;
+        }
+
+        function sudokuSolver(board) {
+            for (let row = 0; row < 9; row++) {
+                for (let col = 0; col < 9; col++) {
+                    if (board[row][col] === 0) {
+                        for (let num = 1; num <= 9; num++) {
+                            if (isValid(board, row, col, num)) {
+                                board[row][col] = num;
+                                if (sudokuSolver(board)) return true;
+                                board[row][col] = 0;
+                            }
+                        }
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
+        // Initialize the grid on page load
+        window.onload = createGrid;
+    </script>
+</body>
+</html>
