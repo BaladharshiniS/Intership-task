@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Contact Manager</title>
+    <link rel="stylesheet" href="3style.css"></link>
+</head>
+<body>
+    <div class="container">
+        <h1>📇 Contact Manager</h1>
+        <button class="btn" onclick="toggleAddContact()">
+            <span class="plus-symbol" style="color: aliceblue;">➕</span> Add Contact
+        </button>
+        <button class="btn" onclick="toggleContactList()">📃 Available Contacts</button>
+
+        <div id="addContactSection" style="display: none;">
+            <input type="text" id="name" placeholder="Enter Name" />
+            <input type="tel" id="phone" placeholder="Enter Phone Number" />
+            <input type="email" id="email" placeholder="Enter Email" />
+            <button class="btn" onclick="addContact()">✔️ Save Contact</button>
+        </div>
+
+        <div id="noContactsMessage" class="no-contact">😔 No contacts available.</div>
+        <div class="contact-list" id="contactList"></div>
+    </div>
+
+    <script>
+        let contacts = JSON.parse(localStorage.getItem('contacts')) || [];
+
+        function toggleAddContact() {
+            const addContactSection = document.getElementById("addContactSection");
+            addContactSection.style.display = addContactSection.style.display === "none" ? "block" : "none";
+            clearForm();
+            document.getElementById("noContactsMessage").style.display = "none";
+            document.getElementById("contactList").style.display = "none";
+        }
+
+        function toggleContactList() {
+            const contactList = document.getElementById("contactList");
+            const noContactsMessage = document.getElementById("noContactsMessage");
+
+            if (contacts.length === 0) {
+                noContactsMessage.classList.add("shake");
+                noContactsMessage.style.display = 'block';
+                setTimeout(() => noContactsMessage.classList.remove("shake"), 500); // Remove shake after animation
+                contactList.style.display = 'none';
+            } else {
+                contactList.style.display = contactList.style.display === 'none' ? 'block' : 'none';
+                noContactsMessage.style.display = 'none';
+                displayContacts();
+            }
+        }
+
+        function addContact() {
+            const name = document.getElementById("name").value;
+            const phone = document.getElementById("phone").value;
+            const email = document.getElementById("email").value;
+
+            if (name && phone && email) {
+                contacts.push({ name, phone, email });
+                localStorage.setItem('contacts', JSON.stringify(contacts));
+                clearForm();
+                toggleAddContact();
+                alert("🎉 Contact added successfully!");
+            } else {
+                alert("⚠️ Please fill in all fields!");
+            }
+        }
+
+        function displayContacts() {
+            const contactList = document.getElementById("contactList");
+            contactList.innerHTML = '';
+
+            contacts.forEach((contact, index) => {
+                const contactItem = document.createElement('div');
+                contactItem.classList.add('contact-item');
+                contactItem.innerHTML = `
+                    <div>
+                        <span class="emoji">😊</span> <strong>${contact.name}</strong>
+                        <p>${contact.phone}</p>
+                        <p>${contact.email}</p>
+                    </div>
+                    <div class="contact-actions">
+                        <button class="action-btn edit-btn" onclick="editContact(${index})">✏️</button>
+                        <button class="action-btn delete-btn" onclick="deleteContact(${index})">❌</button>
+                    </div>
+                `;
+                contactList.appendChild(contactItem);
+            });
+        }
+
+        function editContact(index) {
+            const contact = contacts[index];
+            document.getElementById("name").value = contact.name;
+            document.getElementById("phone").value = contact.phone;
+            document.getElementById("email").value = contact.email;
+
+            toggleAddContact();
+            document.querySelector("button[onclick='addContact()']").onclick = function() {
+                updateContact(index);
+            };
+        }
+
+        function updateContact(index) {
+            contacts[index] = {
+                name: document.getElementById("name").value,
+                phone: document.getElementById("phone").value,
+                email: document.getElementById("email").value
+            };
+            localStorage.setItem('contacts', JSON.stringify(contacts));
+            toggleAddContact();
+            alert("✏️ Contact updated!");
+            displayContacts();
+        }
+
+        function deleteContact(index) {
+            contacts.splice(index, 1);
+            localStorage.setItem('contacts', JSON.stringify(contacts));
+            alert("❌ Contact deleted!");
+            displayContacts();
+        }
+
+        function clearForm() {
+            document.getElementById("name").value = '';
+            document.getElementById("phone").value = '';
+            document.getElementById("email").value = '';
+        }
+
+        displayContacts();
+    </script>
+</body>
+</html>
