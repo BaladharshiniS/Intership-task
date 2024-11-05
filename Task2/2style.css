@@ -1,0 +1,78 @@
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    background: linear-gradient(135deg, #ff6f61, #ffafbd);
+    background: url('../images/task 2 img.jpg');
+    color: #333;
+}
+
+.game-container {
+    background: #f2e2a5;
+    padding: 20px 40px;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    max-width: 400px;
+    width: 100%;
+}
+
+h1 {
+    color: #fb6558;
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+p {
+    font-size: 16px;
+    color: #555;
+}
+
+input[type="number"] {
+    width: 60%;
+    padding: 8px;
+    margin: 15px 0;
+    border-radius: 8px;
+    border: 1px solid #f3c027;
+    font-size: 16px;
+    text-align: center;
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 16px;
+    color: #fff;
+    background-color: #ff6f61;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #f24949;
+}
+
+.feedback {
+    margin-top: 10px;
+    font-size: 18px;
+}
+
+.emoji {
+    font-size: 24px;
+}
+
+.attempts {
+    font-size: 14px;
+    color: #5b2d2d;
+}
+
+.win-message {
+    color: #28a745;
+    font-size: 20px;
+    margin-top: 10px;
+    font-weight: bold;
+}
